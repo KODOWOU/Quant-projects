@@ -7,6 +7,8 @@ It combines portfolio optimization, factor-based strategies, and rolling backtes
 
 The objective is to design robust and diversified portfolios using liquid ETFs, while assessing their performance under realistic market conditions.
 
+## NB: pour visualiser les résultats de compilaion du code, veuillez ouvrir le notebook exploration.ipynb
+
 ---
 
 ## Key Features
