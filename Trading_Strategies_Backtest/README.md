@@ -1,301 +1,292 @@
-📘 Scanner de Marchés & Framework Quantitatif de Stratégies et Backtests
-🎯 Vue d’ensemble
-Ce projet implémente un framework quantitatif complet permettant :
+# Scanner de Marchés & Framework Quantitatif — Documentation Technique
 
-d’identifier automatiquement les régimes de marché (tendance, range, impulsion, volatilité)
+## Objectif
 
-de scanner plusieurs actifs pour détecter des opportunités
+Ce document décrit l’architecture technique, les choix méthodologiques et le fonctionnement interne du framework de scan de marchés et de stratégies quantitatives.
 
-de sélectionner une stratégie adaptée au régime détecté
+L’objectif est de détailler comment les données sont traitées, comment les régimes de marché sont détectés et comment les décisions d’investissement sont générées.
 
-de backtester ces stratégies sur une période future
+---
 
-de comparer plusieurs stratégies dans un environnement interactif
+## Architecture du système
 
-L’objectif est de construire un outil réaliste, modulaire et pédagogique, similaire aux environnements utilisés dans les desks quantitatifs (CTA, systematic macro, equity quant).
+Le framework suit une pipeline modulaire :
 
-⭐ Fonctionnalités principales
-Téléchargement robuste des données (Yahoo Finance)
+```id="g7k1pw"
+Données → Détection des régimes → Scanner → Sélection de stratégie → Backtest → Visualisation
+```
 
-Détection de 4 régimes de marché :
+Chaque module est indépendant et extensible.
 
-Volatilité (low/normal/high)
+---
 
-Tendance (uptrend/downtrend/neutral)
+## Structure du projet
 
-Range (marché plat)
-
-Impulsion (explosion haussière/baissière)
-
-Scanner multi‑actifs
-
-Analyse d’un marché à une date donnée (scan historique)
-
-Sélection de stratégie basée sur le régime
-
-Backtesting modulaire (en développement)
-
-Comparaison de stratégies (en développement)
-
-Dashboard Streamlit multi‑onglets
-
-Architecture pédagogique et extensible
-
-📁 Structure du projet
-Code
+```id="zfdjbt"
 quant-market-scanner/
 │
-├── data_loader.py          # Téléchargement robuste des données OHLCV
+├── data_loader.py          # Acquisition et nettoyage des données
 ├── regimes.py              # Détection des régimes de marché
-├── market_scanner.py       # Analyse d’un marché + scanner multi-actifs
+├── market_scanner.py       # Analyse multi-actifs
 │
-├── strategies/             # (À compléter)
+├── strategies/             # Implémentation des stratégies
 │   ├── ema_cross.py
 │   ├── ichimoku.py
 │   ├── breakout.py
 │   └── mean_reversion.py
 │
-├── backtester/             # (À compléter)
+├── backtester/             # Moteur de backtest
 │   ├── engine.py
 │   ├── metrics.py
 │   └── utils.py
 │
 ├── app.py                  # Dashboard Streamlit
-├── main.py                 # Script de test local
-└── README.md
-🧠 Méthodologie
-1. Chargement des données
-Données OHLCV téléchargées via yfinance
+├── main.py                 # Point d’entrée
+```
 
-Système de retry automatique en cas d’erreur réseau
+---
 
-Correction des MultiIndex Yahoo Finance
+## Couche Données
 
-Vérification stricte des colonnes obligatoires
+### Source
 
-Index temporel propre et nettoyé
+* Yahoo Finance via `yfinance`
 
-2. Détection des régimes de marché
-Le framework identifie quatre régimes fondamentaux :
+### Fonctionnalités
 
-🔹 Volatility Regime
-Classe le marché en :
+* Système de retry automatique
+* Vérification des données OHLCV
+* Correction des structures MultiIndex
+* Nettoyage de l’index temporel
+* Gestion des valeurs manquantes
 
-low_vol
+### Sortie
 
-normal
+DataFrame propre et exploitable indexé par date.
 
-high_vol
+---
 
-Basé sur ATR et volatilité relative.
+## Détection des régimes de marché
 
-🔹 Trend Regime
-Détecte :
+Le système identifie 4 dimensions indépendantes du marché.
 
-uptrend
+---
 
-downtrend
+### 1. Régime de volatilité
 
-neutral
+**Méthode :**
 
-début de tendance (transition neutral → trend)
+* ATR (Average True Range)
+* Volatilité relative
 
-Basé sur la pente d’une moyenne mobile et des seuils dynamiques.
+**Classes :**
 
-🔹 Range Regime
-Détecte les marchés plats via :
+* Faible volatilité
+* Volatilité normale
+* Forte volatilité
 
-Bollinger Bandwidth
+---
 
-contraction de volatilité (ATR ratio)
+### 2. Régime de tendance
 
-🔹 Impulse Regime
-Détecte les explosions de prix via :
+**Méthode :**
 
-ROC (Rate of Change)
+* Pente d’une moyenne mobile
+* Seuils dynamiques
 
-breakout de n jours
+**Classes :**
 
-volume spike
+* Tendance haussière
+* Tendance baissière
+* Neutre
+* Début de tendance
 
-3. Scanner de marchés
-Le scanner analyse plusieurs actifs simultanément et renvoie :
+---
 
-Volatilité actuelle
+### 3. Détection de range
 
-Tendance
+**Méthode :**
 
-Range ou non
+* Bollinger Bandwidth
+* Contraction de volatilité
 
-Impulsion
+**Logique :**
+Bandes étroites + faible volatilité → marché en range
 
-Début de tendance
+---
 
-Résumé intelligent
+### 4. Détection d’impulsion
 
-Exemples de signaux :
+**Méthode :**
 
-“marché calme en range”
+* Rate of Change (ROC)
+* Breakout sur n périodes
+* Spike de volume
 
-“début de tendance haussière”
+**Classes :**
 
-“marché explosif haussier”
+* Impulsion haussière
+* Impulsion baissière
 
-“tendance baissière”
+---
 
-4. Sélection de stratégie (basée sur le régime)
-Stratégie	Régime optimal
-Mean Reversion	Range + Low Vol
-EMA Cross	Début de tendance
-Breakout	Impulsion
-Ichimoku	Tendance établie
+## Scanner de marchés
 
-Le dashboard permettra de choisir une stratégie en fonction du régime détecté.
+Le scanner agrège les signaux sur plusieurs actifs.
 
-5. Backtesting (en développement)
-Le moteur de backtest supportera :
+### Entrées
 
-Positions long-only ou long/short
+* Liste de tickers
+* Date d’analyse
 
-Position sizing basé sur ATR
+### Sorties
 
-Stop-loss / take-profit
+Pour chaque actif :
 
-Extraction des trades
+* Régime de volatilité
+* Tendance
+* Détection de range
+* Signal d’impulsion
+* Début de tendance
 
-Equity curve
+### Exemples de sorties
 
-Métriques de performance :
+* « marché calme en range »
+* « début de tendance haussière »
+* « breakout haussier »
+* « tendance baissière »
 
-Sharpe
+---
 
-Sortino
+## Logique de sélection des stratégies
 
-Max drawdown
+Les stratégies sont associées aux régimes de marché :
 
-CAGR
+| Stratégie      | Régime optimal            |
+| -------------- | ------------------------- |
+| Mean Reversion | Range + faible volatilité |
+| EMA Cross      | Début de tendance         |
+| Breakout       | Impulsion                 |
+| Ichimoku       | Tendance établie          |
 
-Win rate
+Cette approche permet une allocation dynamique.
 
-6. Comparaison de stratégies (en développement)
-Le module permettra :
+---
 
-Backtests multiples
+## Moteur de backtest (en cours)
 
-Comparaison des métriques
+### Fonctionnalités prévues
 
-Superposition des equity curves
+* Long-only et long/short
+* Position sizing basé sur ATR
+* Stop-loss / take-profit
+* Extraction des trades
+* Courbe d’equity
 
-Classement des stratégies
+### Métriques
 
-7. Dashboard Streamlit
-Le dashboard est organisé en quatre onglets :
+* Sharpe Ratio
+* Sortino Ratio
+* Maximum Drawdown
+* CAGR
+* Win rate
 
-🟦 1. Scanner de marchés
-Saisie des tickers
+---
 
-Choix de la date du scan
+## Module de comparaison (en cours)
 
-Analyse multi‑actifs
+* Backtests multiples
+* Comparaison des performances
+* Superposition des equity curves
+* Classement des stratégies
 
-Tableau des signaux
+---
 
-Graphique du prix
+## Couche de visualisation
 
-🟩 2. Stratégies
-Liste des stratégies
+Dashboard développé avec Streamlit.
 
-Description
+### Modules
 
-Paramètres ajustables
+1. Scanner de marchés
 
-🟧 3. Backtest
-Choix de la stratégie
+   * Analyse multi-actifs
+   * Tableau des signaux
+   * Graphiques de prix
 
-Choix de la période
+2. Stratégies
 
-Résultats du backtest
+   * Description
+   * Paramètres
 
-🟥 4. Comparaison
-Sélection de plusieurs stratégies
+3. Backtest
 
-Comparaison des performances
+   * Résultats
+   * Performances
 
-📊 Intuition économique
-Régimes de marché
-Les marchés changent de comportement selon la volatilité, la tendance et la structure.
-Un système robuste doit s’adapter à ces régimes.
+4. Comparaison
 
-Trend Following
-Les tendances persistent souvent à cause des flux macro et institutionnels.
+   * Analyse comparative
 
-Mean Reversion
-Les marchés en range oscillent autour d’un équilibre.
+---
 
-Breakout / Impulse
-Les explosions de prix suivent souvent des phases de contraction.
+## Principes de conception
 
-Approche dynamique
-Un système statique échoue dans un marché dynamique.
-Un système basé sur les régimes s’adapte automatiquement.
+### Modularité
 
-📈 Résultats attendus
-Détection précise des débuts de tendance
+Chaque composant est indépendant.
 
-Identification des zones de contraction de volatilité
+### Extensibilité
 
-Détection des breakouts
+Ajout facile de nouvelles stratégies ou modèles.
 
-Stratégies plus robustes qu’un modèle unique
+### Reproductibilité
 
-Meilleure adaptation aux conditions de marché
+Pipeline déterministe.
 
-⚠ Limites
-Pas encore de coûts de transaction
+### Interprétabilité
 
-Pas de slippage
+Les signaux sont lisibles et compréhensibles.
 
-Données Yahoo Finance parfois incomplètes
+---
 
-Backtester en cours de développement
+## Intuition économique
 
-Seuils de régimes à optimiser
+Le framework repose sur plusieurs principes clés :
 
-🚀 Améliorations possibles
-Ajout de risk parity / volatility targeting
+* Les marchés évoluent selon différents régimes
+* Aucune stratégie ne fonctionne en permanence
+* Les systèmes adaptatifs sont plus robustes
 
-Modèles de régimes avancés (HMM, clustering)
+---
 
-Backtests multi‑actifs
+## Limites
 
-Walk‑forward optimization
+* Pas de coûts de transaction
+* Pas de slippage
+* Données Yahoo Finance parfois imparfaites
+* Backtester encore en développement
+* Seuils de régimes non optimisés
 
-Intégration d’Ollama pour :
+---
 
-commentaires automatiques
+## Améliorations possibles
 
-rapports de marché
+* Modèles de régimes avancés (HMM, clustering)
+* Walk-forward optimization
+* Intégration multi-actifs
+* Risk parity / volatility targeting
 
-explication pédagogique des signaux
+---
 
-🛠 Technologies utilisées
-Python
+## Auteur
 
-Pandas, NumPy
-
-yfinance
-
-Streamlit
-
-Matplotlib / Plotly
-
-Architecture modulaire orientée objet
-
-👤 Auteur
-Kodjo Anthelme Kodowou  
+Kodjo Anthelme Kodowou
 Analyste Quantitatif Junior
-Nancy, France
 
-📜 Disclaimer
+---
+
+## Disclaimer
+
 Ce projet est destiné à l’apprentissage et à la recherche.
-Il ne constitue en aucun cas un conseil en investissement.
+Il ne constitue pas un conseil en investissement.
