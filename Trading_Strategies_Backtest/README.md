@@ -23,25 +23,29 @@ Chaque module est indépendant et extensible.
 ## Structure du projet
 
 ```id="zfdjbt"
-quant-market-scanner/
+Trading strategies backtest/
 │
-├── data_loader.py          # Acquisition et nettoyage des données
-├── regimes.py              # Détection des régimes de marché
-├── market_scanner.py       # Analyse multi-actifs
+├── data_loader.py          # Chargement des données (Yahoo Finance, nettoyage)
+├── regimes.py              # Détection des régimes de marché (trend, vol, range, impulse)
+├── market_scanner.py       # Scanner multi-actifs + génération de signaux
+├── indicator_lib.py        # Indicateurs techniques (RSI, VWAP, etc.)
 │
-├── strategies/             # Implémentation des stratégies
-│   ├── ema_cross.py
-│   ├── ichimoku.py
-│   ├── breakout.py
-│   └── mean_reversion.py
+├── strategies/
+│   ├── ema_cross.py        # Stratégie de croisement de moyennes mobiles
+│   ├── ichimoku.py         # Stratégie Ichimoku
+│   ├── rsi_strategies.py   # Stratégies basées sur RSI
+│   ├── vwp_mean_reversion.py # Mean reversion basée sur VWAP
 │
-├── backtester/             # Moteur de backtest
-│   ├── engine.py
-│   ├── metrics.py
-│   └── utils.py
+├── backtest_py/
+│   ├── backtest.py         # Engine de backtesting principal
+│   ├── metrics.py          # Métriques de performance (Sharpe, drawdown, etc.)
+│   ├── position_sizing.py  # Gestion du sizing des positions
+│   ├── visualization.py    # Visualisation des résultats de backtest
 │
 ├── app.py                  # Dashboard Streamlit
-├── main.py                 # Point d’entrée
+├── main.py                 # Script principal / tests
+├── exploration.ipynb       # Notebook d’exploration et prototypage
+├── plan.txt                # Notes / roadmap du projet
 ```
 
 ---
