@@ -27,7 +27,7 @@ This notebook contains:
 * Backtesting results
 * Visualizations
 
-➡️ It is the **entry point of the project** and reflects the full research workflow.
+ It is the **entry point of the project** and reflects the full research workflow.
 
 ---
 
@@ -129,8 +129,8 @@ A rolling window approach is implemented to simulate realistic investment condit
   * Optimize portfolio on historical data
   * Apply weights to next period returns
 
-✅ This removes look-ahead bias
-✅ This mimics real portfolio management
+ This removes look-ahead bias
+ This mimics real portfolio management
 
 ---
 
