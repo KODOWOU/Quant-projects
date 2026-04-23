@@ -3,15 +3,17 @@
 import matplotlib.pyplot as plt
 
 
-def plot_prices(prices):
-    prices.plot(figsize=(10, 5), title="Asset Prices")
-    plt.xlabel("Time")
-    plt.ylabel("Price")
+def plot_efficient_frontier(df):
+    plt.scatter(df["Volatility"], df["Return"], c=df["Sharpe"])
+    plt.xlabel("Volatility")
+    plt.ylabel("Return")
+    plt.title("Efficient Frontier")
+    plt.colorbar(label="Sharpe Ratio")
     plt.show()
 
 
-def plot_cumulative_returns(cum_returns):
-    cum_returns.plot(figsize=(10, 5), title="Cumulative Returns")
+def plot_performance(cum_returns, title="Portfolio Performance"):
+    cum_returns.plot(figsize=(10, 5), title=title)
     plt.xlabel("Time")
     plt.ylabel("Growth")
     plt.show()
