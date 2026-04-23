@@ -6,6 +6,8 @@ Ce document décrit l’architecture technique, les choix méthodologiques et le
 
 L’objectif est de détailler comment les données sont traitées, comment les régimes de marché sont détectés et comment les décisions d’investissement sont générées.
 
+## NB: pour visualiser les résultats de compilaion du code, veuillez ouvrir le notebook exploration.ipynb
+
 ---
 
 ## Architecture du système
