@@ -2,49 +2,74 @@
 
 ## Overview
 
-This project implements a quantitative framework for ETF portfolio allocation and backtesting.
-It combines portfolio optimization, factor-based strategies, and rolling backtesting to evaluate systematic investment approaches across multiple asset classes.
+This project implements a **quantitative portfolio allocation framework** based on ETFs across multiple asset classes.
 
-The objective is to design robust and diversified portfolios using liquid ETFs, while assessing their performance under realistic market conditions.
+It combines:
 
-## NB: pour visualiser les résultats de compilaion du code, veuillez ouvrir le notebook exploration.ipynb
+* Portfolio optimization (Maximum Sharpe Ratio)
+* Factor investing (Momentum strategy)
+* Rolling backtesting
+
+The objective is to build **robust, diversified portfolios** and evaluate their performance under realistic market conditions.
+
+---
+
+##  How to Use This Project
+
+ The main analysis and results are available in:
+
+**`exploration.ipynb`**
+
+This notebook contains:
+
+* Data exploration
+* Portfolio construction
+* Backtesting results
+* Visualizations
+
+➡️ It is the **entry point of the project** and reflects the full research workflow.
 
 ---
 
 ## Key Features
 
-* Multi-asset ETF universe (Equities, Bonds, Commodities, Crypto)
-* Data pipeline using Yahoo Finance
-* Monthly return computation and time series analysis
-* Portfolio optimization (Maximum Sharpe Ratio)
+* Multi-asset ETF universe:
+
+  * Equities
+  * Bonds
+  * Commodities
+  * Crypto (ETPs)
+* Data pipeline using `yfinance`
+* Monthly return computation
+* Maximum Sharpe Ratio optimization
 * Efficient Frontier simulation
-* Rolling window backtesting
-* Momentum-based allocation strategy
+* Rolling window backtesting (realistic)
+* Momentum-based allocation (factor strategy)
 * Sensitivity analysis on portfolio weights
-* Visualization of performance and risk metrics
+* Full visualization of performance and risk metrics
 
 ---
 
 ## Project Structure
 
-```
-etf-portfolio-strategy/
+```text id="etfstruct1"
+ETF-Portfolio-optimization/
 │
-├── data/                # Stored datasets (optional CSV exports)
-├── notebooks/           # Exploratory analysis and testing
+├── data/                    # Optional data storage
+├── exploration.ipynb        # Main research notebook (core of the project)
+│
 ├── src/
-│   ├── data_loader.py
-│   ├── returns.py
-│   ├── portfolio.py
-│   ├── optimization.py
-│   ├── efficient_frontier.py
-│   ├── rolling_backtest.py
-│   ├── momentum.py
-│   ├── sensitivity.py
-│   └── visualization.py
+│   ├── data_loader.py       # Data acquisition & cleaning
+│   ├── returns.py           # Return computation
+│   ├── portfolio.py         # Portfolio construction logic
+│   ├── optimization.py      # Sharpe ratio maximization
+│   ├── efficient_frontier.py # Frontier simulation
+│   ├── rolling_backtest.py  # Rolling backtesting engine
+│   ├── momentum.py          # Momentum factor strategy
+│   ├── sensitivity.py       # Sensitivity analysis
+│   └── visualization.py     # Plotting & charts
 │
-├── main.py              
-├── exploration.ipynb         # Main execution script
+├── main.py                  # Optional script entry point
 └── README.md
 ```
 
@@ -54,27 +79,30 @@ etf-portfolio-strategy/
 
 ### 1. Data Collection
 
-* Daily adjusted prices are downloaded using `yfinance`
-* Data is cleaned, aligned, and forward-filled
+* ETF prices are downloaded using `yfinance`
+* Data is aligned across assets
+* Missing values are forward/backward filled
 * Monthly prices are computed using end-of-period sampling
 
 ---
 
 ### 2. Return Computation
 
-* Log returns are used for stability and aggregation
+* Log returns are used for numerical stability
 * Monthly returns are derived from resampled price series
 
 ---
 
 ### 3. Portfolio Optimization
 
-The portfolio is optimized using a **Maximum Sharpe Ratio approach**:
+The portfolio is optimized using a **Maximum Sharpe Ratio framework**:
 
-* Objective: maximize risk-adjusted return
+* Objective:
+  Maximize risk-adjusted return
+
 * Constraints:
 
-  * Fully invested portfolio (weights sum to 1)
+  * Fully invested portfolio (Σ weights = 1)
   * Long-only (no short selling)
 
 ---
@@ -82,22 +110,27 @@ The portfolio is optimized using a **Maximum Sharpe Ratio approach**:
 ### 4. Efficient Frontier
 
 * Random portfolios are generated
-* Each portfolio’s return, volatility, and Sharpe ratio are computed
-* The efficient frontier is visualized to assess the risk-return tradeoff
+* For each portfolio:
+
+  * Expected return
+  * Volatility
+  * Sharpe ratio are computed
+* The efficient frontier is plotted to visualize the risk-return tradeoff
 
 ---
 
-### 5. Rolling Backtest
+### 5. Rolling Backtest (Key Component)
 
-A rolling window approach is used to simulate realistic investment conditions:
+A rolling window approach is implemented to simulate realistic investment conditions:
 
-* Training window: historical data (e.g. 36 months)
+* Training window: past data (e.g. 36 months)
 * At each step:
 
-  * Optimize portfolio on past data
+  * Optimize portfolio on historical data
   * Apply weights to next period returns
 
-This avoids look-ahead bias and reflects real-world implementation.
+✅ This removes look-ahead bias
+✅ This mimics real portfolio management
 
 ---
 
@@ -105,93 +138,82 @@ This avoids look-ahead bias and reflects real-world implementation.
 
 A cross-sectional momentum strategy is implemented:
 
-* Assets are ranked based on past performance (lookback window)
+* Assets are ranked based on past returns
 * Top-performing ETFs are selected
-* Equal weights are assigned to selected assets
-* Portfolio is rebalanced periodically
+* Equal-weight allocation
+* Periodic rebalancing
 
 ---
 
 ### 7. Sensitivity Analysis
 
-* Portfolio weights are perturbed (+/- shocks)
-* Impact on returns is measured
-* Helps identify concentration risk and robustness
+* Portfolio weights are perturbed
+* Impact on performance is measured
+* Used to assess robustness and concentration risk
 
 ---
 
 ## Economic Intuition
 
-The project is grounded in well-established financial principles:
-
 ### Diversification
 
-Combining multiple asset classes (equities, bonds, commodities, crypto) reduces idiosyncratic risk and improves portfolio stability.
+Combining multiple asset classes reduces idiosyncratic risk and improves stability.
+
+---
 
 ### Risk-Return Tradeoff
 
-The optimization framework seeks efficient portfolios that maximize return per unit of risk (Sharpe ratio).
+The Sharpe optimization identifies portfolios that maximize return per unit of risk.
+
+---
 
 ### Momentum Effect
 
-The momentum strategy exploits the empirical observation that assets with strong past performance tend to continue outperforming in the short-to-medium term.
+Assets with strong past performance tend to continue outperforming (behavioral + structural effect).
+
+---
 
 ### Dynamic Allocation
 
-Rolling optimization allows the portfolio to adapt to changing market conditions rather than relying on static allocations.
+Rolling optimization adapts to market changes, unlike static portfolios.
 
 ---
 
 ## Results
 
-Typical findings from the framework include:
+The framework typically shows:
 
-* Optimized portfolios achieve higher Sharpe ratios compared to equal-weighted portfolios
-* Momentum strategies can outperform static allocations in trending markets
-* Rolling backtests show more realistic (and often lower) performance than static backtests
-* Diversification across asset classes reduces drawdowns during market stress
+* Higher Sharpe ratios for optimized portfolios vs naive allocation
+* Momentum strategies outperform in trending markets
+* Rolling backtests produce more realistic (and lower) performance
+* Diversification reduces drawdowns
 
-Visualization outputs include:
+### Outputs
 
-* Efficient frontier (risk vs return)
+* Efficient frontier
 * Cumulative performance curves
-* Rolling portfolio performance
+* Rolling performance
 * Risk-return scatter plots
 
 ---
 
 ## Limitations
 
-This project has several important limitations:
-
-### No Transaction Costs
-
-* Rebalancing is assumed to be frictionless
-* In reality, transaction costs reduce performance
-
-### Data Constraints
-
-* Relies on Yahoo Finance data (may contain inconsistencies)
-* ETF availability varies across regions
-
-### Model Simplifications
-
-* Mean-variance optimization assumes stable correlations
-* Momentum strategy ignores market regimes
-
-### No Constraints on Liquidity / AUM
-
-* Real-world ETF selection would include liquidity filters
+* No transaction costs or slippage
+* Reliance on Yahoo Finance data
+* Mean-variance assumes stable correlations
+* Momentum strategy does not include regime filtering
+* No liquidity constraints
 
 ---
 
 ## Possible Improvements
 
-* Incorporate transaction costs and slippage
-* Add benchmark comparison (e.g. MSCI World)
-* Implement risk parity or minimum variance strategies
-* Include regime detection models
-* Improve factor models (multi-factor approach)
+* Add transaction costs and slippage
+* Benchmark comparison (e.g. MSCI World)
+* Risk parity / minimum variance strategies
+* Integration with regime detection models
+* Multi-factor strategies
 
 ---
 
@@ -200,7 +222,7 @@ This project has several important limitations:
 * Python (NumPy, Pandas, SciPy)
 * yfinance
 * Matplotlib
-* Object-oriented modular design
+* Modular architecture
 
 ---
 
