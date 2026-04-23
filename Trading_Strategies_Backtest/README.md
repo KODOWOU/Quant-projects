@@ -266,9 +266,6 @@ Le framework repose sur plusieurs principes clés :
 
 ## Limites
 
-* Pas de coûts de transaction
-* Pas de slippage
-* Données Yahoo Finance parfois imparfaites
 * Backtester encore en développement
 * Seuils de régimes non optimisés
 
