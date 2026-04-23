@@ -41,7 +41,8 @@ etf-portfolio-strategy/
 │   ├── sensitivity.py
 │   └── visualization.py
 │
-├── main.py              # Main execution script
+├── main.py              
+├── exploration.ipynb         # Main execution script
 └── README.md
 ```
 
