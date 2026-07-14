@@ -1,3 +1,5 @@
+# src/static_backtest.py
+
 import pandas as pd
 from src.portfolio import portfolio_return, portfolio_metrics
 
