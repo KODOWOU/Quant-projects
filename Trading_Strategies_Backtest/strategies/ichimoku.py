@@ -6,9 +6,9 @@ import pandas as pd
 def ichimoku_strategy(df: pd.DataFrame) -> pd.Series:
     """
     Stratégie Ichimoku avec logique d'état persistante :
-    - Entrée long : prix > Kumo, Tenkan > Kijun, Chikou > prix
+    - Entrée long : prix > Kumo, Tenkan > Kijun, Close[t] > Close[t-26]
     - Sortie long : Tenkan < Kijun ou prix < Kumo
-    - Entrée short : prix < Kumo, Tenkan < Kijun, Chikou < prix
+    - Entrée short : prix < Kumo, Tenkan < Kijun, Close[t] < Close[t-26]
     - Sortie short : Tenkan > Kijun ou prix > Kumo
     """
 
@@ -23,7 +23,8 @@ def ichimoku_strategy(df: pd.DataFrame) -> pd.Series:
         price = close.iloc[i]
         span_a = senkou_a.iloc[i]
         span_b = senkou_b.iloc[i]
-        chikou_val = chikou.iloc[i]
+        # Chikou rule without look-ahead: today's close vs the close 26 periods ago
+        # (the chikou line itself is Close shifted 26 periods into the past for plotting)
 
         # Détermination du Kumo
         kumo_high = max(span_a, span_b)
@@ -53,7 +54,7 @@ def ichimoku_strategy(df: pd.DataFrame) -> pd.Series:
             if (
                 price > kumo_high and
                 tenkan.iloc[i] > kijun.iloc[i] and
-                chikou_val > close.iloc[i - 26]
+                price > close.iloc[i - 26]
             ):
                 current_position = 1
 
@@ -61,7 +62,7 @@ def ichimoku_strategy(df: pd.DataFrame) -> pd.Series:
             elif (
                 price < kumo_low and
                 tenkan.iloc[i] < kijun.iloc[i] and
-                chikou_val < close.iloc[i - 26]
+                price < close.iloc[i - 26]
             ):
                 current_position = -1
 

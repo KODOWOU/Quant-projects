@@ -30,8 +30,13 @@ def load_data(tickers, start_date="2013-01-01"):
         else:
             raise ValueError(f"No 'Close' column found. Columns returned: {raw.columns}")
 
-    # Rename columns using your dictionary keys
-    data.columns = list(tickers.keys())
+    # Rename columns by ticker (yfinance sorts columns alphabetically,
+    # so renaming by position would mislabel the ETFs)
+    missing = set(tickers.values()) - set(data.columns)
+    if missing:
+        raise ValueError(f"Tickers not returned by Yahoo Finance: {sorted(missing)}")
+    ticker_to_name = {ticker: name for name, ticker in tickers.items()}
+    data = data[list(tickers.values())].rename(columns=ticker_to_name)
 
     # Clean missing values
     data = data.dropna(how="all").ffill().bfill()
