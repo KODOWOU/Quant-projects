@@ -36,18 +36,14 @@ Trading strategies backtest/
 │   ├── ema_cross.py        # Stratégie de croisement de moyennes mobiles
 │   ├── ichimoku.py         # Stratégie Ichimoku
 │   ├── rsi_strategies.py   # Stratégies basées sur RSI
-│   ├── vwp_mean_reversion.py # Mean reversion basée sur VWAP
 │
 ├── backtest_py/
 │   ├── backtest.py         # Engine de backtesting principal
 │   ├── metrics.py          # Métriques de performance (Sharpe, drawdown, etc.)
-│   ├── position_sizing.py  # Gestion du sizing des positions
-│   ├── visualization.py    # Visualisation des résultats de backtest
 │
 ├── app.py                  # Dashboard Streamlit
 ├── main.py                 # Script principal / tests
 ├── exploration.ipynb       # Notebook d’exploration et prototypage
-├── plan.txt                # Notes / roadmap du projet
 ```
 
 ---
@@ -266,6 +262,18 @@ Le framework repose sur plusieurs principes clés :
 
 ---
 
+## Known issues / Rebuild in progress
+
+> The backtest part of this project will be merged into **Regime-Aware Allocation** (link will be added here). Known issues in the current version:
+
+- **Look-ahead bias in Ichimoku:** `chikou = Close.shift(-26)` is used in the entry rule, so the strategy reads the price 26 days ahead. Ichimoku results must not be used.
+- **Look-ahead bias in regime detection:** thresholds are quantiles computed on the full history (for example `hv.quantile(0.30)`), so a 2016 regime depends on 2025 data.
+- **Position sizing:** the backtest trades one share on a 10,000 USD capital (exposure below 1%), so equity curves and Sharpe ratios are not meaningful.
+- `scan_markets()` crashes (`last - 1` on a Timestamp).
+- Not implemented yet: the VWAP mean-reversion strategy (only the VWAP indicator exists in `indicator_lib.py`), position sizing and backtest visualization. The three empty placeholder files were removed in November 2026.
+
+---
+
 ## Limites
 
 * Backtester encore en développement
@@ -285,7 +293,7 @@ Le framework repose sur plusieurs principes clés :
 ## Auteur
 
 Kodjo Anthelme Kodowou
-Analyste Quantitatif Junior
+Étudiant en M2 Ingénierie Financière de Marché (Université de Lorraine)
 
 ---
 

@@ -153,6 +153,13 @@ The simulation highlights the asymmetry and uncertainty inherent in financial ma
 
 ---
 
+## Known issues
+
+* The README describes the exact log discretization, but the code uses the arithmetic approximation (Gaussian returns compounded with a cumulative product).
+* This project is duplicated in the separate repository `projet-quantitatif-Brownian-Motion`.
+
+---
+
 ## Limitations
 
 * Assumes constant drift and volatility
@@ -186,7 +193,7 @@ The simulation highlights the asymmetry and uncertainty inherent in financial ma
 ## Author
 
 Kodjo Anthelme Kodowou
-Junior Quantitative Analyst
+MSc student, Financial Market Engineering (Université de Lorraine)
 
 ---
 

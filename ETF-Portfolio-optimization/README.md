@@ -55,7 +55,6 @@ This notebook contains:
 ```text id="etfstruct1"
 ETF-Portfolio-optimization/
 │
-├── data/                    # Optional data storage
 ├── exploration.ipynb        # Main research notebook (core of the project)
 │
 ├── src/
@@ -197,6 +196,17 @@ The framework typically shows:
 
 ---
 
+## Known issues / Rebuild in progress
+
+> This project is being rebuilt as **Portfolio & Risk Engine** (link will be added here). Known issues in the current version:
+
+* **Asset names are shifted.** `yf.download()` returns columns sorted alphabetically by ticker, while `data_loader.py` renames them in dictionary order. In the executed notebook the labels do not match the ETFs (for example, "US_Total" is actually GLD and "LT_Treasury" is actually VNQ). The allocations and economic conclusions shown in the notebook are therefore not reliable.
+* **The rolling backtest cannot be reproduced with the current code.** It was run with an earlier version: `optimization.py` now returns a dictionary, which `rolling_backtest.py` does not handle.
+* `portfolio_k.ipynb` has never been executed (it imports functions that do not exist). An empty notebook (`notebooks/exploratory_analysis.ipynb`) was removed in November 2026.
+* The Results section above is qualitative. Figures will be published once the fixes are in place.
+
+---
+
 ## Limitations
 
 * No transaction costs or slippage
@@ -229,7 +239,7 @@ The framework typically shows:
 ## Author
 
 Kodjo Anthelme Kodowou
-Junior Quantitative Analyst
+MSc student, Financial Market Engineering (Université de Lorraine)
 
 ---
 

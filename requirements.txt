@@ -1,0 +1,20 @@
+# Python dependencies for all projects in this repository.
+# Install with: python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+numpy
+pandas
+scipy
+matplotlib
+seaborn
+yfinance
+pandas-datareader
+scikit-learn
+xgboost
+tensorflow
+shap
+streamlit
+ipywidgets
+jupyter
+# TA-Lib (Trading_Strategies_Backtest) needs the C library first:
+#   Linux: build ta-lib from source or use your distribution package, then `pip install TA-Lib`
+#   Windows/macOS: see https://ta-lib.github.io/ta-lib-python/install.html
+TA-Lib

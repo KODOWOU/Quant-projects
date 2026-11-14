@@ -62,10 +62,15 @@ The model uses the following inputs:
 
 The analytical and Monte Carlo prices are expected to be close when the number of simulations is sufficiently large.
 
-Typical output:
+Actual output (S = K = 100, T = 1, r = 5%, σ = 20%, 100,000 simulations, seed 42), compiled with `g++ -std=c++17 -O2 black_scholes.cpp -o bs`:
 
-* Black-Scholes Call Price ≈ X
-* Monte Carlo Call Price ≈ X (close value)
+```
+Black-Scholes Call Price: 10.4506
+Black-Scholes Put Price:  5.57353
+Monte Carlo Call Price:   10.4741
+```
+
+The Monte Carlo estimate is within 0.03 of the analytical price.
 
 ---
 
@@ -76,6 +81,16 @@ Typical output:
 * Discounting reflects time value of money
 
 The Monte Carlo method illustrates how option pricing can be viewed as an expected discounted payoff under the risk-neutral measure.
+
+---
+
+## Known issues / Rebuild in progress
+
+> This project will be extended into **QuantLibLite**, a C++17 derivatives pricing library (link will be added here). Current limits:
+
+* No Greeks yet (delta, gamma, vega).
+* No confidence interval for the Monte Carlo estimate and no variance reduction.
+* No build file (CMake) and no automated tests.
 
 ---
 
@@ -100,7 +115,7 @@ The Monte Carlo method illustrates how option pricing can be viewed as an expect
 ## Author
 
 Kodjo Anthelme Kodowou
-Junior Quantitative Analyst
+MSc student, Financial Market Engineering (Université de Lorraine)
 
 ---
 
